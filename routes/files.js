@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const File = require('../models/file');
 const { v4: uuidv4 } = require('uuid');
-const { sendMail } = require('../services/emailServices');
+const sendMail = require('../services/emailServices');
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -45,17 +45,17 @@ router.post('/send', async (req, res) => {
     if (!uuid || !emailFrom || !emailTo) {
         return res.status(422).send({ error: 'All fields are required!' });
     }
-    
+
     // Get data from database
     const file = await File.findOne({ uuid: uuid });
-    if (!file.sender) {
+    if (file.sender) {
         return res.status(422).send({ error: 'Email already sent!' });
     }
 
     // Save details into the database
     file.sender = emailFrom;
     file.receiver = emailTo;
-    const response = await File.save();
+    const response = await file.save();
 
     // Send email
     sendMail({
@@ -66,10 +66,12 @@ router.post('/send', async (req, res) => {
         html: require('../services/emailTemplate')({
             emailFrom,
             downloadLink: `${process.env.APP_BASE_URL}/files/${file.uuid}`,
-            size: parseInt(file.size/1000) + 'KB',
+            size: parseInt(file.size / 1000) + 'KB',
             expires: '24 hours',
         }),
     });
+
+    res.send({ success: true });
 });
 
 module.exports = router;
