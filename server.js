@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 
@@ -10,6 +11,12 @@ const connectDB = require('./config/db');
 connectDB();
 
 app.use(express.json());
+
+// Cors
+const corsOptions = {
+    origin: process.env.ALLOWED_CLIENTS.split(',')
+}
+app.use(cors(corsOptions));
 
 // Template engine
 app.set('views', path.join(__dirname, '/views'));
