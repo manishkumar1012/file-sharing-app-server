@@ -58,7 +58,7 @@ router.post('/send', async (req, res) => {
     const response = await file.save();
 
     // Send email
-    sendMail({
+    await sendMail({
         from: emailFrom,
         to: emailTo,
         subject: 'File Sharing App',
