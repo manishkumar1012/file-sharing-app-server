@@ -12,7 +12,7 @@ connectDB();
 
 app.use(express.json());
 
-// Cors
+// Cors setup
 const corsOptions = {
     origin: process.env.ALLOWED_CLIENTS.split(',')
 }
