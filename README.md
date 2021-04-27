@@ -1,6 +1,6 @@
 # FileShare-App api
 
-Visit the below repository for the frontend part:
+Visit this repo for the frontend part:
 https://github.com/manishkumar1012/fileshare-app
 
 API's
